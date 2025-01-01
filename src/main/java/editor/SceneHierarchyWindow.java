@@ -1,7 +1,6 @@
 package editor;
 
 import imgui.ImGui;
-import imgui.flag.ImGuiDragDropFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import jade.GameObject;
 import jade.Window;
