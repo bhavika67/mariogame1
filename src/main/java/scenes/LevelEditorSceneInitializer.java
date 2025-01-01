@@ -3,10 +3,10 @@ package scenes;
 import components.*;
 import imgui.ImGui;
 import imgui.ImVec2;
-import jade.*;
+import jade.GameObject;
+import jade.Prefabs;
+import jade.Sound;
 import org.joml.Vector2f;
-import physics2dtmp.PhysicsSystem2D;
-import physics2dtmp.rigidbody.Rigidbody2D;
 import util.AssetPool;
 
 import java.io.File;
@@ -29,6 +29,7 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         levelEditorStuff = scene.createGameObject("LevelEditor");
         levelEditorStuff.setNoSerialize();
         levelEditorStuff.addComponent(new MouseControls());
+        levelEditorStuff.addComponent(new KeyControls());
         levelEditorStuff.addComponent(new GridLines());
         levelEditorStuff.addComponent(new EditorCamera(scene.camera()));
         levelEditorStuff.addComponent(new GizmoSystem(gizmos));
