@@ -6,6 +6,7 @@ public class Event {
     public Event(EventType type) {
         this.type = type;
     }
+
     public Event() {
         this.type = EventType.UserEvent;
     }
