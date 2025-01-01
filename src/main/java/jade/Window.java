@@ -3,7 +3,6 @@ package jade;
 import observers.EventSystem;
 import observers.Observer;
 import observers.events.Event;
-import observers.events.EventType;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -232,8 +231,10 @@ public class Window implements Observer {
                 break;
             case LoadLevel:
                 Window.changeScene(new LevelEditorSceneInitializer());
+                break;
             case SaveLevel:
                 currentScene.save();
+                break;
         }
     }
 }
