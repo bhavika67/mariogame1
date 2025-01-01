@@ -27,7 +27,7 @@ public class Renderer {
         boolean added = false;
         for (RenderBatch batch : batches) {
             if (batch.hasRoom() && batch.zIndex() == sprite.gameObject.transform.zIndex) {
-            Texture tex = sprite.getTexture();
+                Texture tex = sprite.getTexture();
                 if (tex == null || (batch.hasTexture(tex) || batch.hasTextureRoom())) {
                     batch.addSprite(sprite);
                     added = true;
@@ -53,6 +53,7 @@ public class Renderer {
             }
         }
     }
+
     public static void bindShader(Shader shader) {
         currentShader = shader;
     }

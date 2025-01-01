@@ -1,9 +1,9 @@
 package jade;
 
+import observers.Observer;
 import observers.ObserverHandler;
 import observers.events.Event;
 import observers.events.EventType;
-import observers.events.Observer;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -12,6 +12,8 @@ import scenes.LevelEditorInitializer;
 import scenes.Scene;
 import scenes.SceneInitializer;
 import util.AssetPool;
+
+import java.util.logging.Level;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;

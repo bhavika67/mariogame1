@@ -2,7 +2,6 @@ package observers;
 
 import jade.GameObject;
 import observers.events.Event;
-import observers.events.Observer;
 
 import java.util.ArrayList;
 import java.util.List;

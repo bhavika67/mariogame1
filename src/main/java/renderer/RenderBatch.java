@@ -113,6 +113,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
             this.hasRoom = false;
         }
     }
+
     public boolean destroyIfExists(GameObject go) {
         SpriteRenderer sprite = go.getComponent(SpriteRenderer.class);
         for (int i=0; i < numSprites; i++) {
@@ -127,6 +128,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
         return false;
     }
+
     public void render() {
         boolean rebufferData = false;
         for (int i=0; i < numSprites; i++) {

@@ -1,8 +1,9 @@
 package jade;
 
+import components.Component;
 import editor.JImGui;
 import org.joml.Vector2f;
-import components.Component;
+
 public class Transform extends Component {
 
     public Vector2f position;
@@ -26,7 +27,7 @@ public class Transform extends Component {
         this.position = position;
         this.scale = scale;
         this.rotation = 0;
-        this.zIndex=0;
+        this.zIndex = 0;
     }
 
     public Transform copy() {
@@ -34,12 +35,13 @@ public class Transform extends Component {
         copy.rotation = this.rotation;
         return copy;
     }
+
     @Override
     public void imgui() {
         JImGui.drawVec2Control("Position", this.position);
         JImGui.drawVec2Control("Scale", this.scale, 32.0f);
         this.rotation = JImGui.dragFloat("Rotation", this.rotation);
-        this.zIndex =  JImGui.dragInt("Z-Index", this.zIndex);
+        this.zIndex = JImGui.dragInt("Z-Index", this.zIndex);
     }
 
     public void copy(Transform to) {
@@ -56,5 +58,5 @@ public class Transform extends Component {
         Transform t = (Transform)o;
         return t.position.equals(this.position) && t.scale.equals(this.scale) &&
                 t.rotation == this.rotation && t.zIndex == this.zIndex;
-         }
+    }
 }

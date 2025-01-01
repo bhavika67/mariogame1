@@ -182,7 +182,8 @@ public class ImGuiLayer {
 
         // ------------------------------------------------------------
         // Use freetype instead of stb_truetype to build a fonts texture
-        //ImGuiFreeType.buildFontAtlas(fontAtlas, ImGuiFreeType.RasterizerFlags.LightHinting);
+       // ImGuiFreeType.buildFontAtlas(fontAtlas, ImGuiFreeType.RasterizerFlags.LightHinting);
+
         fontAtlas.setFlags(ImGuiFreeTypeBuilderFlags.LightHinting);
         fontAtlas.build();
         // Method initializes LWJGL3 renderer.
@@ -236,6 +237,7 @@ public class ImGuiLayer {
         imGuiGl3.renderDrawData(ImGui.getDrawData());
     }
 
+    // If you want to clean a room after yourself - do it by yourself
     private void destroyImGui() {
         imGuiGl3.dispose();
         ImGui.destroyContext();
