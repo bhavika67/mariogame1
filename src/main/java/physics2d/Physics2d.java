@@ -6,56 +6,51 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 import org.joml.Vector2f;
 import physics2d.components.Box2DCollider;
 import physics2d.components.CircleCollider;
 import physics2d.components.Rigidbody2D;
-import util.Settings;
 
 public class Physics2D {
-    private Vec2 gravity;
-    private World world;
+    private Vec2 gravity = new Vec2(0, -10.0f);
+    private World world = new World(gravity);
+
     private float physicsTime = 0.0f;
+    private float physicsTimeStep = 1.0f / 60.0f;
+    private int velocityIterations = 8;
+    private int positionIterations = 3;
 
-    private boolean isPlaying;
-
-    public Physics2D(boolean isPlaying) {
-        this.isPlaying = isPlaying;
-        this.gravity = new Vec2(0, -3f);
-        this.world = new World(gravity);
-        world.setDebugDraw(new DebugDrawJ2D());
-    }
-
-    public void addGameObject(GameObject go) {
+    public void add(GameObject go) {
         Rigidbody2D rb = go.getComponent(Rigidbody2D.class);
         if (rb != null && rb.getRawBody() == null) {
-            Transform transform = go.getComponent(Transform.class);
+            Transform transform = go.transform;
 
             BodyDef bodyDef = new BodyDef();
-            bodyDef.position.set(transform.position.x, transform.position.y);
             bodyDef.angle = (float)Math.toRadians(transform.rotation);
+            bodyDef.position.set(transform.position.x, transform.position.y);
             bodyDef.angularDamping = rb.getAngularDamping();
             bodyDef.linearDamping = rb.getLinearDamping();
             bodyDef.fixedRotation = rb.isFixedRotation();
             bodyDef.bullet = rb.isContinuousCollision();
 
             switch (rb.getBodyType()) {
-                case Kinematic: bodyDef.type = org.jbox2d.dynamics.BodyType.KINEMATIC; break;
-                case Static: bodyDef.type = org.jbox2d.dynamics.BodyType.STATIC; break;
-                case Dynamic: bodyDef.type = org.jbox2d.dynamics.BodyType.DYNAMIC; break;
+                case Kinematic: bodyDef.type = BodyType.KINEMATIC; break;
+                case Static: bodyDef.type = BodyType.STATIC; break;
+                case Dynamic: bodyDef.type = BodyType.DYNAMIC; break;
             }
 
             PolygonShape shape = new PolygonShape();
-            CircleCollider circleCollider = null;
-            Box2DCollider box2DCollider = null;
+            CircleCollider circleCollider;
+            Box2DCollider boxCollider;
+
             if ((circleCollider = go.getComponent(CircleCollider.class)) != null) {
                 shape.setRadius(circleCollider.getRadius());
-                bodyDef.position.set(transform.position.x - circleCollider.getRadius(), transform.position.y - circleCollider.getRadius());
-            } else if ((box2DCollider = go.getComponent(Box2DCollider.class)) != null) {
-                Vector2f halfSize = new Vector2f(box2DCollider.getHalfSize()).mul(0.5f);
-                Vector2f offset = box2DCollider.getOffset();
-                Vector2f origin = new Vector2f(box2DCollider.getOrigin());
+            } else if ((boxCollider = go.getComponent(Box2DCollider.class)) != null) {
+                Vector2f halfSize = new Vector2f(boxCollider.getHalfSize()).mul(0.5f);
+                Vector2f offset = boxCollider.getOffset();
+                Vector2f origin = new Vector2f(boxCollider.getOrigin());
                 shape.setAsBox(halfSize.x, halfSize.y, new Vec2(origin.x, origin.y), 0);
 
                 Vec2 pos = bodyDef.position;
@@ -67,10 +62,6 @@ public class Physics2D {
             Body body = this.world.createBody(bodyDef);
             rb.setRawBody(body);
             body.createFixture(shape, rb.getMass());
-
-            if (isPlaying) {
-                rb.setIsPlaying(true);
-            }
         }
     }
 
@@ -85,16 +76,10 @@ public class Physics2D {
     }
 
     public void update(float dt) {
-        if (!isPlaying) return;
-
         physicsTime += dt;
         if (physicsTime >= 0.0f) {
-            physicsTime -= Settings.PHYSICS_TIMESTEP;
-            world.step(Settings.PHYSICS_TIMESTEP, Settings.PHYSICS_VELOCITY_ITERATIONS, Settings.PHYSICS_POSITION_ITERATIONS);
+            physicsTime -= physicsTimeStep;
+            world.step(physicsTimeStep, velocityIterations, positionIterations);
         }
-    }
-
-    public void debugDraw() {
-        world.drawDebugData();
     }
 }

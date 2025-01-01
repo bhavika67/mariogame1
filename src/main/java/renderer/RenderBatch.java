@@ -98,7 +98,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
         int index = this.numSprites;
         this.sprites[index] = spr;
         this.numSprites++;
-        spr.setDirty();
 
         if (spr.getTexture() != null) {
             if (!textures.contains(spr.getTexture())) {
@@ -112,21 +111,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
         if (numSprites >= this.maxBatchSize) {
             this.hasRoom = false;
         }
-    }
-
-    public boolean destroyIfExists(GameObject go) {
-        SpriteRenderer sprite = go.getComponent(SpriteRenderer.class);
-        for (int i=0; i < numSprites; i++) {
-            if (sprites[i] == sprite) {
-                for (int j=i; j < numSprites - 1; j++) {
-                    sprites[j] = sprites[j + 1];
-                    sprites[j].setDirty();
-                }
-                numSprites--;
-                return true;
-            }
-        }
-        return false;
     }
 
     public void render() {
@@ -170,6 +154,22 @@ public class RenderBatch implements Comparable<RenderBatch> {
         shader.detach();
     }
 
+    public boolean destroyIfExists(GameObject go) {
+        SpriteRenderer sprite = go.getComponent(SpriteRenderer.class);
+        for (int i=0; i < numSprites; i++) {
+            if (sprites[i] == sprite) {
+                for (int j=i; j < numSprites - 1; j++) {
+                    sprites[j] = sprites[j + 1];
+                    sprites[j].setDirty();
+                }
+                numSprites--;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void loadVertexProperties(int index) {
         SpriteRenderer sprite = this.sprites[index];
 
@@ -201,15 +201,15 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
 
         // Add vertices with the appropriate properties
-        float xAdd = 0.5f;
-        float yAdd = 0.5f;
+        float xAdd = 1.0f;
+        float yAdd = 1.0f;
         for (int i=0; i < 4; i++) {
             if (i == 1) {
-                yAdd = -0.5f;
+                yAdd = 0.0f;
             } else if (i == 2) {
-                xAdd = -0.5f;
+                xAdd = 0.0f;
             } else if (i == 3) {
-                yAdd = 0.5f;
+                yAdd = 1.0f;
             }
 
             Vector4f currentPos = new Vector4f(sprite.gameObject.transform.position.x + (xAdd * sprite.gameObject.transform.scale.x),

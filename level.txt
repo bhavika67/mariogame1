@@ -1,6 +1,6 @@
 [
   {
-    "uid": 5,
+    "uid": 0,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -57,13 +57,29 @@
           },
           "uid": 18
         }
+      },
+      {
+        "type": "physics2d.components.Rigidbody2D",
+        "properties": {
+          "velocity": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "angularDamping": 0.8,
+          "linearDamping": 0.9,
+          "mass": 20.9,
+          "bodyType": "Dynamic",
+          "fixedRotation": false,
+          "continuousCollision": true,
+          "uid": 63
+        }
       }
     ],
     "doSerialization": true,
     "isDead": false
   },
   {
-    "uid": 6,
+    "uid": 1,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -126,7 +142,7 @@
     "isDead": false
   },
   {
-    "uid": 7,
+    "uid": 2,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -182,6 +198,40 @@
             ]
           },
           "uid": 22
+        }
+      },
+      {
+        "type": "physics2d.components.Rigidbody2D",
+        "properties": {
+          "velocity": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "angularDamping": 0.8,
+          "linearDamping": 0.9,
+          "mass": 4.5,
+          "bodyType": "Dynamic",
+          "fixedRotation": false,
+          "continuousCollision": true,
+          "uid": 42
+        }
+      },
+      {
+        "type": "physics2d.components.Box2DCollider",
+        "properties": {
+          "halfSize": {
+            "x": 1.0,
+            "y": 1.0
+          },
+          "origin": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "uid": 43
         }
       }
     ],

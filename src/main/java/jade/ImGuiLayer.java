@@ -182,7 +182,7 @@ public class ImGuiLayer {
 
         // ------------------------------------------------------------
         // Use freetype instead of stb_truetype to build a fonts texture
-       // ImGuiFreeType.buildFontAtlas(fontAtlas, ImGuiFreeType.RasterizerFlags.LightHinting);
+        //ImGuiFreeType.buildFontAtlas(fontAtlas, ImGuiFreeType.RasterizerFlags.LightHinting);
 
         fontAtlas.setFlags(ImGuiFreeTypeBuilderFlags.LightHinting);
         fontAtlas.build();

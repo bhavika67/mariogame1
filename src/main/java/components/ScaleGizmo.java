@@ -18,6 +18,6 @@ public class ScaleGizmo extends Gizmo {
             }
         }
 
-        super.update(dt);
+        super.editorUpdate(dt);
     }
 }

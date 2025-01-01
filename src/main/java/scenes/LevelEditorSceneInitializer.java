@@ -6,28 +6,29 @@ import imgui.ImVec2;
 import jade.GameObject;
 import jade.Prefabs;
 import org.joml.Vector2f;
-import scenes.Scene;
-import scenes.SceneInitializer;
 import util.AssetPool;
 
-public class LevelEditorInitializer extends SceneInitializer {
+public class LevelEditorSceneInitializer extends SceneInitializer {
+
     private Spritesheet sprites;
     private GameObject levelEditorStuff;
+
+    public LevelEditorSceneInitializer() {
+
+    }
 
     @Override
     public void init(Scene scene) {
         sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
         Spritesheet gizmos = AssetPool.getSpritesheet("assets/images/gizmos.png");
 
-        levelEditorStuff = new GameObject("Level Editor Stuff");
+        levelEditorStuff = scene.createGameObject("LevelEditor");
         levelEditorStuff.setNoSerialize();
         levelEditorStuff.addComponent(new MouseControls());
-        //levelEditorStuff.addComponent(new GridLines());
+        levelEditorStuff.addComponent(new GridLines());
         levelEditorStuff.addComponent(new EditorCamera(scene.camera()));
         levelEditorStuff.addComponent(new GizmoSystem(gizmos));
         scene.addGameObjectToScene(levelEditorStuff);
-
-        //levelEditorStuff.start();
     }
 
     @Override
@@ -77,7 +78,7 @@ public class LevelEditorInitializer extends SceneInitializer {
 
             ImGui.pushID(i);
             if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                GameObject object = Prefabs.generateSpriteObject(sprite, 0.25f, 0.25f);
+                GameObject object = Prefabs.generateSpriteObject(sprite, 32, 32);
                 levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);
             }
             ImGui.popID();

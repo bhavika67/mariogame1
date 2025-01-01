@@ -5,7 +5,7 @@ import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 import jade.MouseListener;
 import jade.Window;
-import observers.ObserverHandler;
+import observers.EventSystem;
 import observers.events.Event;
 import observers.events.EventType;
 import org.joml.Vector2f;
@@ -13,19 +13,20 @@ import org.joml.Vector2f;
 public class GameViewWindow {
 
     private float leftX, rightX, topY, bottomY;
-    private boolean isPlaying;
+    private boolean isPlaying = false;
 
     public void imgui() {
-        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
+        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
+                | ImGuiWindowFlags.MenuBar);
 
         ImGui.beginMenuBar();
         if (ImGui.menuItem("Play", "", isPlaying, !isPlaying)) {
             isPlaying = true;
-            ObserverHandler.notify(null, new Event(EventType.GameEngineStartPlay));
+            EventSystem.notify(null, new Event(EventType.GameEngineStartPlay));
         }
         if (ImGui.menuItem("Stop", "", !isPlaying, isPlaying)) {
             isPlaying = false;
-            ObserverHandler.notify(null, new Event(EventType.GameEngineStopPlay));
+            EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
         }
         ImGui.endMenuBar();
 
