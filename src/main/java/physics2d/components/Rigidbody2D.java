@@ -15,16 +15,21 @@ public class Rigidbody2D extends Component {
     private boolean fixedRotation = false;
     private boolean continuousCollision = true;
 
+    private transient Body rawBody = null;
+    private transient boolean isPlaying = false;
+
+    public Rigidbody2D() {
+
+    }
+
     @Override
     public void update(float dt) {
-        if (rawBody != null) {
-            this.gameObject.transform.position.set(
-                    rawBody.getPosition().x, rawBody.getPosition().y
-            );
-            this.gameObject.transform.rotation = (float)Math.toDegrees(rawBody.getAngle());
+        Collider collider = gameObject.getComponent(Collider.class);
+        if (rawBody != null && isPlaying && collider != null) {
+            this.gameObject.transform.position.set(this.rawBody.getPosition().x - collider.getOffset().x, this.rawBody.getPosition().y - collider.getOffset().y);
+            this.gameObject.transform.rotation = (float) Math.toDegrees(this.rawBody.getAngle());
         }
     }
-    private Body rawBody = null;
 
     public Vector2f getVelocity() {
         return velocity;
@@ -88,5 +93,9 @@ public class Rigidbody2D extends Component {
 
     public void setRawBody(Body rawBody) {
         this.rawBody = rawBody;
+    }
+
+    public void setIsPlaying(boolean val) {
+        this.isPlaying = val;
     }
 }

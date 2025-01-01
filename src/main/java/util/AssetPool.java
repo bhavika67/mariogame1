@@ -51,4 +51,9 @@ public class AssetPool {
         }
         return AssetPool.spritesheets.getOrDefault(file.getAbsolutePath(), null);
     }
+    public static void reset() {
+        AssetPool.spritesheets.clear();
+        AssetPool.textures.clear();
+        AssetPool.shaders.clear();
+    }
 }

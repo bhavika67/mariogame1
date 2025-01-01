@@ -1,7 +1,13 @@
 package jade;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import components.Component;
+import components.ComponentDeserializer;
+import components.SpriteRenderer;
 import imgui.ImGui;
+import util.AssetPool;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +19,11 @@ public class GameObject {
     private List<Component> components;
     public transient Transform transform;
     private boolean doSerialization = true;
+    private boolean isDead = false;
 
     public GameObject(String name) {
         this.name = name;
-
         this.components = new ArrayList<>();
-
 
         this.uid = ID_COUNTER++;
     }
@@ -66,14 +71,19 @@ public class GameObject {
         }
     }
 
+    public void destroy() {
+        this.isDead = true;
+        for (int i=0; i < components.size(); i++) {
+            components.get(i).destroy();
+        }
+    }
+
     public void imgui() {
         for (Component c : components) {
-            c.imgui();
             if (ImGui.collapsingHeader(c.getClass().getSimpleName()))
                 c.imgui();
         }
     }
-
 
     public static void init(int maxId) {
         ID_COUNTER = maxId;
@@ -87,11 +97,40 @@ public class GameObject {
         return this.components;
     }
 
+    public GameObject copy() {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Component.class, new ComponentDeserializer())
+                .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .create();
+        String objAsJson = gson.toJson(this);
+        GameObject obj = gson.fromJson(objAsJson, GameObject.class);
+        obj.generateUid();
+        for (Component c : obj.getAllComponents()) {
+            c.generateId();
+        }
+
+        SpriteRenderer sprite = obj.getComponent(SpriteRenderer.class);
+        if (sprite != null && sprite.getTexture() != null) {
+            sprite.setTexture(AssetPool.getTexture(sprite.getTexture().getFilepath()));
+        }
+
+        return obj;
+    }
+
     public void setNoSerialize() {
         this.doSerialization = false;
     }
 
     public boolean doSerialization() {
         return this.doSerialization;
+    }
+
+    public void generateUid() {
+        this.uid = ID_COUNTER++;
+    }
+
+    public boolean isDead() {
+        return this.isDead;
     }
 }

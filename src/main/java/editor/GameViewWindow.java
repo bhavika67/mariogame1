@@ -5,14 +5,29 @@ import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 import jade.MouseListener;
 import jade.Window;
+import observers.ObserverHandler;
+import observers.events.Event;
+import observers.events.EventType;
 import org.joml.Vector2f;
 
 public class GameViewWindow {
 
     private float leftX, rightX, topY, bottomY;
+    private boolean isPlaying;
 
     public void imgui() {
-        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
+        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
+
+        ImGui.beginMenuBar();
+        if (ImGui.menuItem("Play", "", isPlaying, !isPlaying)) {
+            isPlaying = true;
+            ObserverHandler.notify(null, new Event(EventType.GameEngineStartPlay));
+        }
+        if (ImGui.menuItem("Stop", "", !isPlaying, isPlaying)) {
+            isPlaying = false;
+            ObserverHandler.notify(null, new Event(EventType.GameEngineStopPlay));
+        }
+        ImGui.endMenuBar();
 
         ImVec2 windowSize = getLargestSizeForViewport();
         ImVec2 windowPos = getCenteredPositionForViewport(windowSize);

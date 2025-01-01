@@ -1,7 +1,7 @@
 package physics2d.enums;
 
 public enum BodyType {
-    Static,
+    Kinematic,
     Dynamic,
-    Kinematic
+    Static
 }
