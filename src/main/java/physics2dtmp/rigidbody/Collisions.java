@@ -1,8 +1,8 @@
-package physics2d.rigidbody;
+package physics2dtmp.rigidbody;
 
 import org.joml.Vector2f;
-import physics2d.primitives.Circle;
-import physics2d.primitives.Collider2D;
+import physics2dtmp.primitives.Circle;
+import physics2dtmp.primitives.Collider2D;
 
 public class Collisions {
     public static CollisionManifold findCollisionFeatures(Collider2D c1, Collider2D c2) {
