@@ -610,7 +610,7 @@
                   "frameTime": 0.1
                 }
               ],
-              "time": 0.05678711,
+              "time": 0.06591568,
               "doesLoop": false
             },
             {
@@ -6792,7 +6792,7 @@
                   "frameTime": 0.23
                 }
               ],
-              "time": 0.035099328,
+              "time": 0.5359157,
               "doesLoop": true
             },
             {
@@ -7059,7 +7059,7 @@
                   "frameTime": 0.23
                 }
               ],
-              "time": 0.035099328,
+              "time": 0.5359157,
               "doesLoop": true
             },
             {
@@ -7326,7 +7326,7 @@
                   "frameTime": 0.23
                 }
               ],
-              "time": 0.035099328,
+              "time": 0.5359157,
               "doesLoop": true
             },
             {
@@ -7563,7 +7563,7 @@
                   "frameTime": 0.23
                 }
               ],
-              "time": 0.18678711,
+              "time": 0.19591568,
               "doesLoop": true
             },
             {
@@ -19290,7 +19290,7 @@
                   "frameTime": 0.23
                 }
               ],
-              "time": 0.18678711,
+              "time": 0.19591568,
               "doesLoop": true
             },
             {
