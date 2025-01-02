@@ -84,7 +84,7 @@ dependencies {
 ---
 
 ## Usage
-Once the game starts, players can control the Mario character using the specified controls (see below) and interact with the environment. Collect coins, avoid obstacles, and complete levels.
+Once the game starts, players can control the Mario character using the specified controls (see below) and interact with the environment. Collect coins, avoid obstacles.
 
 ---
 
