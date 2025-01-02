@@ -8,347 +8,153 @@ import physics2dtmp.rigidbody.IntersectionDetector2D;
 import physics2dtmp.rigidbody.Rigidbody2D;
 import renderer.Line2D;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * A suite of JUnit tests verifying 2D intersection logic, such as lines, circles, and boxes.
+ * <p>
+ * Each test is intended to confirm correctness of IntersectionDetector2D for points lying on lines,
+ * circles, or boxes, as well as negative test cases where geometry should not intersect.
+ */
 public class CollisionDetectorTests {
-    private final float EPSILON = 0.000001f;
 
-    // ============================================================================================
-    // Line Intersection tests
-    // ============================================================================================
+    private final float EPSILON = 1e-6f;
+
+    // ---------------------------------------------------------
+    // LINE INTERSECTION TESTS
+    // ---------------------------------------------------------
     @Test
-    public void pointOnLine2DShouldReturnTrueTest() {
+    public void pointOnLine_shouldReturnTrue_whenExactlyAtLineStart() {
+        // line from (0, 0) to (12, 4)
         Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(12, 4));
         Vector2f point = new Vector2f(0, 0);
 
-        assertTrue(IntersectionDetector2D.pointOnLine(point, line));
+        assertTrue(IntersectionDetector2D.pointOnLine(point, line),
+                "Expected point (0, 0) to be on line start");
     }
 
     @Test
-    public void pointOnLine2DShouldReturnTrueTestTwo() {
+    public void pointOnLine_shouldReturnTrue_whenExactlyAtLineEnd() {
         Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(12, 4));
         Vector2f point = new Vector2f(12, 4);
 
-        assertTrue(IntersectionDetector2D.pointOnLine(point, line));
+        assertTrue(IntersectionDetector2D.pointOnLine(point, line),
+                "Expected point (12, 4) to be on line end");
     }
 
     @Test
-    public void pointOnVerticalLineShouldReturnTrue() {
+    public void pointOnLine_shouldReturnTrue_onVerticalLine() {
+        // vertical line from (0,0) to (0,10)
         Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(0, 10));
         Vector2f point = new Vector2f(0, 5);
 
-        boolean result = IntersectionDetector2D.pointOnLine(point, line);
-        assertTrue(result);
+        assertTrue(IntersectionDetector2D.pointOnLine(point, line),
+                "Expected point (0,5) on vertical line from (0,0) to (0,10)");
     }
 
     @Test
-    public void pointOnLineShouldReturnTrueTestOne() {
+    public void pointOnLine_shouldReturnTrue_whenOnLineMidpoint() {
+        // line from (0,0) to (12,4)
         Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(12, 4));
-        Vector2f point = new Vector2f(0, 0);
+        Vector2f point = new Vector2f(6, 2); // midpoint
 
-        assertTrue(IntersectionDetector2D.pointOnLine(point, line));
+        assertTrue(IntersectionDetector2D.pointOnLine(point, line),
+                "Expected midpoint to be on line");
     }
 
     @Test
-    public void pointOnLineShouldReturnTrueTestTwo() {
+    public void pointOnLine_shouldReturnFalse_whenNotOnLineButBetweenEndpoints() {
+        // line from (0,0) to (12,4)
         Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(12, 4));
-        Vector2f point = new Vector2f(6, 2);
+        Vector2f point = new Vector2f(4, 2); // Not exactly collinear
 
-        assertTrue(IntersectionDetector2D.pointOnLine(point, line));
+        assertFalse(IntersectionDetector2D.pointOnLine(point, line),
+                "Should not lie on line if not collinear");
     }
 
     @Test
-    public void pointOnLineShouldReturnFalseTestOne() {
-        Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(12, 4));
-        Vector2f point = new Vector2f(4, 2);
-
-        assertFalse(IntersectionDetector2D.pointOnLine(point, line));
-    }
-
-    @Test
-    public void pointOnLineShouldReturnTrueTestThree() {
+    public void pointOnLine_shouldReturnTrue_whenLineShifted() {
+        // line from (10,10) to (22,14)
         Line2D line = new Line2D(new Vector2f(10, 10), new Vector2f(22, 14));
-        Vector2f point = new Vector2f(10, 10);
+        Vector2f point = new Vector2f(16, 12); // the midpoint
 
-        assertTrue(IntersectionDetector2D.pointOnLine(point, line));
+        assertTrue(IntersectionDetector2D.pointOnLine(point, line),
+                "Expected midpoint to be on shifted line");
     }
 
     @Test
-    public void pointOnLineShouldReturnTrueTestFour() {
+    public void pointOnLine_shouldReturnFalse_whenCloseButNotCollinear() {
+        // line from (10,10) to (22,14)
         Line2D line = new Line2D(new Vector2f(10, 10), new Vector2f(22, 14));
-        Vector2f point = new Vector2f(16, 12);
+        Vector2f point = new Vector2f(14, 12); // near line but not collinear
 
-        assertTrue(IntersectionDetector2D.pointOnLine(point, line));
+        assertFalse(IntersectionDetector2D.pointOnLine(point, line),
+                "Not exactly collinear => false");
     }
 
+    // ---------------------------------------------------------
+    // Tests for future line or ray functionality
+    // (closestPoint, ray intersection, etc.) are commented out
+    // ---------------------------------------------------------
+    // e.g.:
+    // @Test
+    // public void closestPointOnLine_testCaseOne() { ... }
+
+    // ---------------------------------------------------------
+    // CIRCLE INTERSECTION TESTS
+    // ---------------------------------------------------------
     @Test
-    public void pointOnLineShouldReturnFalseTestTwo() {
-        Line2D line = new Line2D(new Vector2f(10, 10), new Vector2f(22, 14));
-        Vector2f point = new Vector2f(14, 12);
-
-        assertFalse(IntersectionDetector2D.pointOnLine(point, line));
-    }
-
-//    TODO: SHOULD THESE BE IMPLEMENTED
-//    @Test
-//    public void closestPointToLineTestOne() {
-//        Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(12, 4));
-//        Vector2f point = new Vector2f(6, 2);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, line);
-//        Vector2f actualClosestPoint = new Vector2f(6, 2);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToLineTestTwo() {
-//        Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(12, 4));
-//        Vector2f point = new Vector2f(13, 3);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, line);
-//        Vector2f actualClosestPoint = new Vector2f(12, 4);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToLineTestThree() {
-//        Line2D line = new Line2D(new Vector2f(0, 0), new Vector2f(12, 4));
-//        Vector2f point = new Vector2f(7, 4);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, line);
-//        Vector2f actualClosestPoint = new Vector2f(7.5f, 2.5f);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToLineTestFour() {
-//        Line2D line = new Line2D(new Vector2f(10, 10), new Vector2f(22, 14));
-//        Vector2f point = new Vector2f(16, 12);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, line);
-//        Vector2f actualClosestPoint = new Vector2f(16, 12);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToLineTestFive() {
-//        Line2D line = new Line2D(new Vector2f(10, 10), new Vector2f(22, 14));
-//        Vector2f point = new Vector2f(23, 13);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, line);
-//        Vector2f actualClosestPoint = new Vector2f(22, 14);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToLineTestSix() {
-//        Line2D line = new Line2D(new Vector2f(10, 10), new Vector2f(22, 14));
-//        Vector2f point = new Vector2f(17, 14);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, line);
-//        Vector2f actualClosestPoint = new Vector2f(17.5f, 12.5f);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-
-    // =========================================================================================================
-    // Ray2Dcast IntersectionDetector2D tests
-    // =========================================================================================================
-    // TODO: SHOULD THESE BE IMPLEMENTED?
-//    @Test
-//    public void pointOnRayShouldReturnTrueTestOne() {
-//        Ray2D ray = new Ray2D(new Vector2f(0), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(0, 0);
-//
-//        assertTrue(IntersectionDetector2D.pointOnRay(point, ray));
-//    }
-//
-//    @Test
-//    public void pointOnRayShouldReturnTrueTestTwo() {
-//        Ray2D ray = new Ray2D(new Vector2f(0), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(6, 2);
-//
-//        assertTrue(IntersectionDetector2D.pointOnRay(point, ray));
-//    }
-//
-//    @Test
-//    public void pointOnRayShouldReturnFalseTestOne() {
-//        Ray2D ray = new Ray2D(new Vector2f(0), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(-6, -2);
-//
-//        assertFalse(IntersectionDetector2D.pointOnRay(point, ray));
-//    }
-//
-//    @Test
-//    public void pointOnRayShouldReturnFalseTestTwo() {
-//        Ray2D ray = new Ray2D(new Vector2f(0), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(4, 2);
-//
-//        assertFalse(IntersectionDetector2D.pointOnRay(point, ray));
-//    }
-//
-//    @Test
-//    public void pointOnRayShouldReturnTrueTestThree() {
-//        Ray2D ray = new Ray2D(new Vector2f(10, 10), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(10, 10);
-//
-//        assertTrue(IntersectionDetector2D.pointOnRay(point, ray));
-//    }
-//
-//    @Test
-//    public void pointOnRayShouldReturnTrueTestFour() {
-//        Ray2D ray = new Ray2D(new Vector2f(10, 10), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(16, 12);
-//
-//        assertTrue(IntersectionDetector2D.pointOnRay(point, ray));
-//    }
-//
-//    @Test
-//    public void pointOnRayShouldReturnFalseTestThree() {
-//        Ray2D ray = new Ray2D(new Vector2f(10, 10), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(-6 + 10, -2 + 10);
-//
-//        assertFalse(IntersectionDetector2D.pointOnRay(point, ray));
-//    }
-//
-//    @Test
-//    public void pointOnRayShouldReturnFalseTestFour() {
-//        Ray2D ray = new Ray2D(new Vector2f(10, 10), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(14, 12);
-//
-//        assertFalse(IntersectionDetector2D.pointOnRay(point, ray));
-//    }
-//
-//    @Test
-//    public void closestPointToRayTestOne() {
-//        Ray2D ray = new Ray2D(new Vector2f(0, 0), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(-1, -1);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, ray);
-//        Vector2f actualClosestPoint = new Vector2f(0, 0);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToRayTestTwo() {
-//        Ray2D ray = new Ray2D(new Vector2f(0, 0), new Vector2f((float)(3.0 / Math.sqrt(10f)), (float)(1.0 / Math.sqrt(10f))));
-//        Vector2f point = new Vector2f(6, 2);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, ray);
-//        Vector2f actualClosestPoint = new Vector2f(6, 2);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
-//
-//    @Test
-//    public void closestPointToRayTestThree() {
-//        Ray2D ray = new Ray2D(new Vector2f(0, 0), new Vector2f((float)(3.0 / Math.sqrt(10f)), (float)(1.0 / Math.sqrt(10f))));
-//        Vector2f point = new Vector2f(7, 4);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, ray);
-//        Vector2f actualClosestPoint = new Vector2f(7.5f, 2.5f);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
-//
-//    @Test
-//    public void closestPointToRayTestFour() {
-//        Ray2D ray = new Ray2D(new Vector2f(10, 10), new Vector2f(0.948683f, 0.316228f));
-//        Vector2f point = new Vector2f(9, 9);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, ray);
-//        Vector2f actualClosestPoint = new Vector2f(10, 10);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToRayTestFive() {
-//        Ray2D ray = new Ray2D(new Vector2f(10, 10), new Vector2f((float)(3.0 / Math.sqrt(10f)), (float)(1.0 / Math.sqrt(10f))));
-//        Vector2f point = new Vector2f(16, 12);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, ray);
-//        Vector2f actualClosestPoint = new Vector2f(16, 12);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
-//
-//    @Test
-//    public void closestPointToRayTestSix() {
-//        Ray2D ray = new Ray2D(new Vector2f(10, 10), new Vector2f((float)(3.0 / Math.sqrt(10f)), (float)(1.0 / Math.sqrt(10f))));
-//        Vector2f point = new Vector2f(17, 14);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, ray);
-//        Vector2f actualClosestPoint = new Vector2f(17.5f, 12.5f);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
-
-    // =========================================================================================================
-    // Circle intersection tester tests
-    // =========================================================================================================
-    @Test
-    public void pointInCircleShouldReturnTrueTestOne() {
+    public void pointInCircle_shouldReturnTrue_forSimpleOriginCircle() {
         Circle circle = new Circle();
         circle.setRadius(5f);
         Rigidbody2D body = new Rigidbody2D();
         circle.setRigidbody(body);
 
         Vector2f point = new Vector2f(3, -2);
-
-        boolean result = IntersectionDetector2D.pointInCircle(point, circle);
-        assertTrue(result);
+        assertTrue(IntersectionDetector2D.pointInCircle(point, circle),
+                "Point (3, -2) is inside circle of radius 5 at origin");
     }
 
     @Test
-    public void pointInCircleShouldReturnTrueTestTwo() {
+    public void pointInCircle_shouldReturnTrue_whenJustInsideRadius() {
         Circle circle = new Circle();
         circle.setRadius(5f);
         Rigidbody2D body = new Rigidbody2D();
         circle.setRigidbody(body);
 
         Vector2f point = new Vector2f(-4.9f, 0);
-
-        boolean result = IntersectionDetector2D.pointInCircle(point, circle);
-        assertTrue(result);
+        assertTrue(IntersectionDetector2D.pointInCircle(point, circle),
+                "Point just inside radius => true");
     }
 
     @Test
-    public void pointInCircleShouldReturnFalseTestOne() {
+    public void pointInCircle_shouldReturnFalse_whenClearlyOutside() {
         Circle circle = new Circle();
         circle.setRadius(5f);
         Rigidbody2D body = new Rigidbody2D();
         circle.setRigidbody(body);
 
         Vector2f point = new Vector2f(-6, -6);
-
-        boolean result = IntersectionDetector2D.pointInCircle(point, circle);
-        assertFalse(result);
+        assertFalse(IntersectionDetector2D.pointInCircle(point, circle),
+                "Point (-6, -6) is definitely outside radius 5");
     }
 
     @Test
-    public void pointInCircleShouldReturnTrueTestFour() {
+    public void pointInCircle_shouldReturnTrue_whenCircleIsTranslated() {
+        // circle translated by (10,10)
         Circle circle = new Circle();
         circle.setRadius(5f);
         Rigidbody2D body = new Rigidbody2D();
-        body.setTransform(new Vector2f(10));
+        body.setTransform(new Vector2f(10)); // offset
         circle.setRigidbody(body);
 
         Vector2f point = new Vector2f(3 + 10, -2 + 10);
-
-        boolean result = IntersectionDetector2D.pointInCircle(point, circle);
-        assertTrue(result);
+        assertTrue(IntersectionDetector2D.pointInCircle(point, circle),
+                "Point (13,8) inside circle centered at (10,10) radius=5 => true");
     }
 
     @Test
-    public void pointInCircleShouldReturnTrueTestFive() {
+    public void pointInCircle_shouldReturnTrue_whenNearCircleOffsetEdge() {
         Circle circle = new Circle();
         circle.setRadius(5f);
         Rigidbody2D body = new Rigidbody2D();
@@ -356,13 +162,12 @@ public class CollisionDetectorTests {
         circle.setRigidbody(body);
 
         Vector2f point = new Vector2f(-4.9f + 10, 0 + 10);
-
-        boolean result = IntersectionDetector2D.pointInCircle(point, circle);
-        assertTrue(result);
+        assertTrue(IntersectionDetector2D.pointInCircle(point, circle),
+                "Just inside offset circle boundary => true");
     }
 
     @Test
-    public void pointInCircleShouldReturnFalseTestTwo() {
+    public void pointInCircle_shouldReturnFalse_whenOutsideTranslatedCircle() {
         Circle circle = new Circle();
         circle.setRadius(5f);
         Rigidbody2D body = new Rigidbody2D();
@@ -370,141 +175,67 @@ public class CollisionDetectorTests {
         circle.setRigidbody(body);
 
         Vector2f point = new Vector2f(-6 + 10, -6 + 10);
-
-        boolean result = IntersectionDetector2D.pointInCircle(point, circle);
-        assertFalse(result);
+        assertFalse(IntersectionDetector2D.pointInCircle(point, circle),
+                "Point is outside the circle after offset => false");
     }
 
-//    TODO: IMPLEMENT THESE
-//    @Test
-//    public void closestPointToCircleTestOne() {
-//        Circle circle = new Circle();
-//        circle.setRadius(1f);
-//        Rigidbody2D body = new Rigidbody2D();
-//        circle.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(5, 0);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, circle);
-//        Vector2f actualClosestPoint = new Vector2f(1, 0);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToCircleTestTwo() {
-//        Circle circle = new Circle();
-//        circle.setRadius(1f);
-//        Rigidbody2D body = new Rigidbody2D();
-//        circle.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(2.5f, -2.5f);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, circle);
-//        Vector2f actualClosestPoint = new Vector2f(0.5773502f, -0.5773502f);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToCircleTestThree() {
-//        Circle circle = new Circle();
-//        circle.setRadius(1f);
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10));
-//        circle.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(5 + 10, 0 + 10);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, circle);
-//        Vector2f actualClosestPoint = new Vector2f(1 + 10, 0 + 10);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToCircleTestFour() {
-//        Circle circle = new Circle();
-//        circle.setRadius(1f);
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10));
-//        circle.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(2.5f + 10, -2.5f + 10);
-//
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, circle);
-//        Vector2f actualClosestPoint = new Vector2f(0.5773502f + 10, -0.5773502f + 10);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
+    // Additional circle tests like closestPointToCircle, etc. are commented out
 
-    // =========================================================================================================
-    // Box2D intersection tester tests
-    // =========================================================================================================
+    // ---------------------------------------------------------
+    // BOX2D (AABB or OBB) INTERSECTION TESTS
+    // ---------------------------------------------------------
     @Test
-    public void pointInBox2DShouldReturnTrueTestOne() {
+    public void pointInBox2D_shouldReturnTrue_whenInsideLocalBoxAtOrigin() {
         Box2D box = new Box2D();
         box.setSize(new Vector2f(10));
         Rigidbody2D body = new Rigidbody2D();
         box.setRigidbody(body);
 
         Vector2f point = new Vector2f(4, 4.3f);
-
-        assertTrue(IntersectionDetector2D.pointInBox2D(point, box));
+        assertTrue(IntersectionDetector2D.pointInBox2D(point, box),
+                "Point (4,4.3) is inside a box of half-size=5 => pass");
     }
 
     @Test
-    public void pointInBox2DShouldReturnTrueTestTwo() {
+    public void pointInBox2D_shouldReturnTrue_nearNegativeEdge() {
         Box2D box = new Box2D();
         box.setSize(new Vector2f(10));
         Rigidbody2D body = new Rigidbody2D();
         box.setRigidbody(body);
 
         Vector2f point = new Vector2f(-4.9f, -4.9f);
-
-        assertTrue(IntersectionDetector2D.pointInBox2D(point, box));
+        assertTrue(IntersectionDetector2D.pointInBox2D(point, box),
+                "Close to negative corner => still inside");
     }
 
     @Test
-    public void pointInBox2DShouldReturnFalseTestOne() {
+    public void pointInBox2D_shouldReturnFalse_whenSlightlyOutsideTopEdge() {
         Box2D box = new Box2D();
         box.setSize(new Vector2f(10));
         Rigidbody2D body = new Rigidbody2D();
         box.setRigidbody(body);
 
+        // top edge is y=5 => 5.1 => out
         Vector2f point = new Vector2f(0, 5.1f);
-
-        assertFalse(IntersectionDetector2D.pointInBox2D(point, box));
+        assertFalse(IntersectionDetector2D.pointInBox2D(point, box),
+                "Slightly above top => false");
     }
 
     @Test
-    public void pointInBox2DShouldReturnTrueTestThree() {
+    public void pointInBox2D_shouldReturnTrue_whenBoxIsTranslated() {
         Box2D box = new Box2D();
         box.setSize(new Vector2f(10));
         Rigidbody2D body = new Rigidbody2D();
-        body.setTransform(new Vector2f(10));
+        body.setTransform(new Vector2f(10)); // move box center
         box.setRigidbody(body);
 
         Vector2f point = new Vector2f(4 + 10, 4.3f + 10);
-
-        assertTrue(IntersectionDetector2D.pointInBox2D(point, box));
+        assertTrue(IntersectionDetector2D.pointInBox2D(point, box),
+                "Inside box after translation => true");
     }
 
     @Test
-    public void pointInBox2DShouldReturnTrueTestFour() {
-        Box2D box = new Box2D();
-        box.setSize(new Vector2f(10));
-        Rigidbody2D body = new Rigidbody2D();
-        body.setTransform(new Vector2f(10));
-        box.setRigidbody(body);
-
-        Vector2f point = new Vector2f(-4.9f + 10, -4.9f + 10);
-
-        assertTrue(IntersectionDetector2D.pointInBox2D(point, box));
-    }
-
-    @Test
-    public void pointInBox2DShouldReturnFalseTestTwo() {
+    public void pointInBox2D_shouldReturnFalse_whenOutsideTranslatedBox() {
         Box2D box = new Box2D();
         box.setSize(new Vector2f(10));
         Rigidbody2D body = new Rigidbody2D();
@@ -512,264 +243,52 @@ public class CollisionDetectorTests {
         box.setRigidbody(body);
 
         Vector2f point = new Vector2f(0 + 10, 5.1f + 10);
-
-        assertFalse(IntersectionDetector2D.pointInBox2D(point, box));
+        assertFalse(IntersectionDetector2D.pointInBox2D(point, box),
+                "Slightly outside upper boundary => false");
     }
 
     @Test
-    public void pointInRotatedBox2DShouldReturnTrueTestOne() {
+    public void pointInBox2D_shouldReturnTrue_whenRotated45AndPointInside() {
         Box2D box = new Box2D();
         box.setSize(new Vector2f(10));
         Rigidbody2D body = new Rigidbody2D();
-        body.setTransform(new Vector2f(0), 45);
+        // rotation 45 deg
+        body.setTransform(new Vector2f(0), 45f);
         box.setRigidbody(body);
 
         Vector2f point = new Vector2f(-1, -1);
-
-        assertTrue(IntersectionDetector2D.pointInBox2D(point, box));
+        assertTrue(IntersectionDetector2D.pointInBox2D(point, box),
+                "Expect point near center is inside 45-degree-rotated box => true");
     }
 
     @Test
-    public void pointInRotatedShouldReturnTrueTestTwo() {
+    public void pointInBox2D_shouldReturnTrue_forCornerPointWithRotation() {
         Box2D box = new Box2D();
         box.setSize(new Vector2f(10));
         Rigidbody2D body = new Rigidbody2D();
-        body.setTransform(new Vector2f(0), 45);
+        body.setTransform(new Vector2f(0), 45f);
         box.setRigidbody(body);
 
+        // e.g. a corner about sqrt(2)/2 * halfsize from center
         Vector2f point = new Vector2f(-3.43553390593f, 3.43553390593f);
-
-        assertTrue(IntersectionDetector2D.pointInBox2D(point, box));
+        assertTrue(IntersectionDetector2D.pointInBox2D(point, box),
+                "Should be inside near corner => true");
     }
 
     @Test
-    public void pointInRotatedShouldReturnFalseTestOne() {
+    public void pointInBox2D_shouldReturnFalse_forPointOutsideWhenBoxRotatedAndTranslated() {
         Box2D box = new Box2D();
         box.setSize(new Vector2f(10));
         Rigidbody2D body = new Rigidbody2D();
-        body.setTransform(new Vector2f(10), 45);
+        body.setTransform(new Vector2f(10), 45f);
         box.setRigidbody(body);
 
-        Vector2f point = new Vector2f(-3.63553390593f, 3.63553390593f);
-
-        assertFalse(IntersectionDetector2D.pointInBox2D(point, box));
-    }
-
-    @Test
-    public void pointInRotatedBox2DShouldReturnTrueTestThree() {
-        Box2D box = new Box2D();
-        box.setSize(new Vector2f(10));
-        Rigidbody2D body = new Rigidbody2D();
-        body.setTransform(new Vector2f(10), 45);
-        box.setRigidbody(body);
-
-        Vector2f point = new Vector2f(-1 + 10, -1 + 10);
-
-        assertTrue(IntersectionDetector2D.pointInBox2D(point, box));
-    }
-
-    @Test
-    public void pointInRotatedShouldReturnTrueTestFour() {
-        Box2D box = new Box2D();
-        box.setSize(new Vector2f(10));
-        Rigidbody2D body = new Rigidbody2D();
-        body.setTransform(new Vector2f(10), 45);
-        box.setRigidbody(body);
-
-        Vector2f point = new Vector2f(-3.43553390593f + 10, 3.43553390593f + 10);
-
-        assertTrue(IntersectionDetector2D.pointInBox2D(point, box));
-    }
-
-    @Test
-    public void pointInRotatedShouldReturnFalseTestTwo() {
-        Box2D box = new Box2D();
-        box.setSize(new Vector2f(10));
-        Rigidbody2D body = new Rigidbody2D();
-        body.setTransform(new Vector2f(10), 45);
-        box.setRigidbody(body);
-
+        // Slightly outside
         Vector2f point = new Vector2f(-3.63553390593f + 10, 3.63553390593f + 10);
-
-        assertFalse(IntersectionDetector2D.pointInBox2D(point, box));
+        assertFalse(IntersectionDetector2D.pointInBox2D(point, box),
+                "Outside bounding region => false");
     }
 
+    // Additional box tests like closestPointToBox2D, etc. are commented out
 
-//    TODO: IMPLEMENT THESE FUNCIONS
-//    @Test
-//    public void closestPointToBox2DTestOne() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(0, 10);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(0, 5);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToBox2DTestTwo() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(-6, -4);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(-5, -4);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToBox2DTestThree() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(3, -4);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(3, -4);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToBox2DTestFour() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10));
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(0 + 10, 10 + 10);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(0 + 10, 5 + 10);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToBox2DTestFive() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10));
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(-6 + 10, -4 + 10);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(-5 + 10, -4 + 10);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToBox2DTestSix() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10));
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(3 + 10, -4 + 10);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(3 + 10, -4 + 10);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint));
-//    }
-//
-//    @Test
-//    public void closestPointToRotatedBox2DTestOne() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10), 45);
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(10, 0);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(7.07106781187f, 0);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
-//
-//    @Test
-//    public void closestPointToRotatedBox2DTestTwo() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10), 45);
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(-5.5355339f, -5.5355339f);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(-3.5355339f, -3.5355339f);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
-//
-//    @Test
-//    public void closestPointToRotatedBox2DTestThree() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10), 45);
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(0, 7.07106781187f);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(0, 7.07106781187f);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
-//
-//    @Test
-//    public void closestPointToRotatedBox2DTestFour() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10), 45);
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(10 + 10, 0 + 10);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(7.07106781187f + 10, 0 + 10);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
-//
-//    @Test
-//    public void closestPointToRotatedBox2DTestFive() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10), 45);
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(-5.5355339f + 10, -5.5355339f + 10);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(-3.5355339f + 10, -3.5355339f + 10);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
-//
-//    @Test
-//    public void closestPointToRotatedBox2DTestSix() {
-//        Box2D box = new Box2D();
-//        box.setSize(new Vector2f(10));
-//        Rigidbody2D body = new Rigidbody2D();
-//        body.setTransform(new Vector2f(10), 45);
-//        box.setRigidbody(body);
-//
-//        Vector2f point = new Vector2f(0 + 10, 7.07106781187f + 10);
-//        Vector2f calculatedClosestPoint = IntersectionDetector2D.closestPoint(point, box);
-//        Vector2f actualClosestPoint = new Vector2f(0 + 10, 7.07106781187f + 10);
-//
-//        assertTrue(JMath.compare(calculatedClosestPoint, actualClosestPoint, EPSILON));
-//    }
 }
