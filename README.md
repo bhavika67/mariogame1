@@ -89,15 +89,21 @@ Once the game starts, players can control the Mario character using the specifie
 ---
 
 ## Controls
-- **Move Left**: `A`
-- **Move Right**: `D`
+- **Move Left**: `Left Arow key`
+- **Move Right**: `Right Arow key`
 - **Jump**: `Space`
-- **Crouch**: `S`
-- **Pause/Resume**: `P`
-- **Exit**: `ESC`
+- **Fireball**: `E`
+
 
 ---
 
+## Future Improvement
+- **Pause/Resume Button** - Implement functionality to pause and resume the game.
+- **Crouch Button** - Add crouching ability for enhanced gameplay mechanics.
+- **Levels** - Introduce multiple levels to increase complexity and engagement.
+
+
+---
 
 ## Acknowledgments
 - Inspired by the classic Mario games.
