@@ -11,6 +11,7 @@ import renderer.Line2D;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 public class CollisionDetectorTests {
     private final float EPSILON = 0.000001f;
 
