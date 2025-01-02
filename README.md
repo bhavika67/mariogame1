@@ -101,6 +101,7 @@ Once the game starts, players can control the Mario character using the specifie
 - **Pause/Resume Button** - Implement functionality to pause and resume the game.
 - **Crouch Button** - Add crouching ability for enhanced gameplay mechanics.
 - **Levels** - Introduce multiple levels to increase complexity and engagement.
+- **Bug Fixes**- Debug and optimize performance issues.
 
 
 ---
